@@ -1,4 +1,3 @@
-// pages/index.tsx
 "use client";
 import React, { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -13,16 +12,14 @@ import { useToast } from "@/components/ui/use-toast";
 import { ModeToggle } from "@/components/Theme-Toggle";
 
 const tab1Schema = z.object({
-    email: z.string().email("Please enter a valid email"),
-    username: z.string().min(2, "Username should be greater than 2 letters").max(50, "Username should be less than 50 characters"),
-    password: z.string().min(8, "Password should be at least 8 characters long")
+    email: z.string().nonempty("Email is required").email("Please enter a valid email"),
+    username: z.string().nonempty("Username is required").min(2, "Username should be greater than 2 letters").max(50, "Username should be less than 50 characters"),
+    password: z.string().nonempty("Password is required").min(8, "Password should be at least 8 characters long")
         .regex(new RegExp('.*[A-Z].*'), "Must have at least one uppercase letter")
         .regex(new RegExp('.*[a-z].*'), "Must have at least one lowercase letter")
         .regex(new RegExp('.*[0-9].*'), "Must contain at least one number")
         .regex(new RegExp('.*[`~<>?,./!@#$%^&*()\\-_+="\'|{}\\[\\];:\\\\].*'), "Must contain at least one special character"),
-    confirmPassword: z.string({
-        required_error: "confirmation is required"
-    })
+    confirmPassword: z.string().nonempty("Confirmation is required")
 }).refine((data) => data.password === data.confirmPassword, {
     message: "Passwords don't match",
     path: ["confirmPassword"],
@@ -31,7 +28,7 @@ const tab1Schema = z.object({
 const tab2Schema = z.object({
     gender: z.string().nonempty("Choose a gender"),
     age: z.number().gte(5, { message: "Your age should be greater than 5" }),
-    bio: z.string().min(20, "Comment should be at least 20 characters").max(200, "Comment should not exceed 200 characters"),
+    bio: z.string().nonempty("Bio is required").min(20, "Comment should be at least 20 characters").max(200, "Comment should not exceed 200 characters"),
     agree: z.boolean(),
     position: z.string().nonempty("Preferred position is required"),
 });
@@ -68,6 +65,11 @@ const Form: React.FC = () => {
 
     function handleSubmit(values: CombinedFormValues) {
         console.log(values);
+
+        formMethods.reset()
+
+        setTab("creds")
+
         toast({
             title: "Message",
             description: "Form submitted successfully",
@@ -84,7 +86,7 @@ const Form: React.FC = () => {
                     "Please fill all the personal information correctly"}`,
         });
 
-        if (errors.tab2) {
+        if (errors.tab2 && !errors.tab1) {
             setTab("personal");
         }
         else {
@@ -106,11 +108,11 @@ const Form: React.FC = () => {
             <div className="flex w-screen justify-center p-11 mt-[1%]">
                 <Tabs value={tab} defaultValue="creds" className="w-[40%]">
                     <TabsList className="grid w-full grid-cols-2">
-                        <TabsTrigger value="creds">Credentials</TabsTrigger>
-                        <TabsTrigger value="personal">Personal</TabsTrigger>
+                        <TabsTrigger onClick={() => setTab("creds")} value="creds">Credentials</TabsTrigger>
+                        <TabsTrigger onClick={() => setTab("personal")} value="personal">Personal</TabsTrigger>
                     </TabsList>
                     <TabsContent value="creds">
-                        <Tab1 formMethods={formMethods} header="Login Credentials" tabChange={tabChange}  handleSubmit={handleSubmit} handleInvalid={handleInvalid} />
+                        <Tab1 formMethods={formMethods} header="Login Credentials" tabChange={tabChange} handleSubmit={handleSubmit} handleInvalid={handleInvalid} />
                     </TabsContent>
                     <TabsContent value="personal">
                         <Tab2 formMethods={formMethods} header="Personal Information" handleSubmit={handleSubmit} handleInvalid={handleInvalid} tabChange={tabChange} />
