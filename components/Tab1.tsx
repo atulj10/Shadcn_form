@@ -5,16 +5,16 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { UseFormReturn, useFormContext } from "react-hook-form";
-import { Tab1FormValues } from "@/app/form/page";
+import { CombinedFormValues } from "@/app/form/page";
 
 interface Tab1Props {
-  formMethods: UseFormReturn<Tab1FormValues>;
-  onSubmit: (values: Tab1FormValues) => void;
+  formMethods: UseFormReturn<CombinedFormValues>;
   header: string;
+  tabChange: (tab: string) => void;
 }
 
-const Tab1: React.FC<Tab1Props> = ({ formMethods, onSubmit, header }) => {
-  const { handleSubmit, control } = formMethods;
+const Tab1: React.FC<Tab1Props> = ({ formMethods, header,tabChange }) => {
+  const { control } = formMethods;
 
   return (
     <Card>
@@ -22,11 +22,11 @@ const Tab1: React.FC<Tab1Props> = ({ formMethods, onSubmit, header }) => {
         <CardTitle>{header}</CardTitle>
       </CardHeader>
       <Form {...formMethods}>
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
+        <form className="space-y-8">
           <CardContent className="py-4 px-8">
             <FormField
               control={control}
-              name="username"
+              name="tab1.username"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Username</FormLabel>
@@ -39,7 +39,7 @@ const Tab1: React.FC<Tab1Props> = ({ formMethods, onSubmit, header }) => {
             />
             <FormField
               control={control}
-              name="email"
+              name="tab1.email"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Email</FormLabel>
@@ -52,7 +52,7 @@ const Tab1: React.FC<Tab1Props> = ({ formMethods, onSubmit, header }) => {
             />
             <FormField
               control={control}
-              name="password"
+              name="tab1.password"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Password</FormLabel>
@@ -63,9 +63,22 @@ const Tab1: React.FC<Tab1Props> = ({ formMethods, onSubmit, header }) => {
                 </FormItem>
               )}
             />
+            <FormField
+              control={control}
+              name="tab1.confirmPassword"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Confirm Password</FormLabel>
+                  <FormControl>
+                    <Input  placeholder="Please confirm your password" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
           </CardContent>
           <CardFooter>
-            <Button type="submit">Submit</Button>
+            <Button onClick={()=>{tabChange("personal")}}>Next</Button>
           </CardFooter>
         </form>
       </Form>

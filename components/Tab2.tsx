@@ -3,22 +3,24 @@ import React from "react";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { UseFormReturn, useFormContext } from "react-hook-form";
-import { Tab2FormValues } from "@/app/form/page";
+import { SubmitErrorHandler, SubmitHandler, UseFormReturn } from "react-hook-form";
+import { Button } from "./ui/button";
+import { CombinedFormValues } from "@/app/form/page";
 
 interface Tab2Props {
-  formMethods: UseFormReturn<Tab2FormValues>;
-  onSubmit: (values: Tab2FormValues) => void;
+  formMethods: UseFormReturn<CombinedFormValues>;
   header: string;
+  handleSubmit: SubmitHandler<CombinedFormValues>;
+  handleInvalid: SubmitErrorHandler<CombinedFormValues>;
+  tabChange: (tab: string) => void;
 }
 
-const Tab2: React.FC<Tab2Props> = ({ formMethods, onSubmit, header }) => {
-  const { handleSubmit, control } = formMethods;
+const Tab2: React.FC<Tab2Props> = ({ formMethods, header, handleSubmit, handleInvalid, tabChange }) => {
+  const { control } = formMethods;
 
   return (
     <Card>
@@ -26,16 +28,20 @@ const Tab2: React.FC<Tab2Props> = ({ formMethods, onSubmit, header }) => {
         <CardTitle>{header}</CardTitle>
       </CardHeader>
       <Form {...formMethods}>
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form onSubmit={formMethods.handleSubmit(handleSubmit, handleInvalid)}>
           <CardContent className="py-1 pb-4 px-8">
             <FormField
               control={control}
-              name="gender"
+              name="tab2.gender"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Choose your Gender</FormLabel>
                   <FormControl>
-                    <RadioGroup onValueChange={field.onChange} defaultValue={field.value} className="flex flex-col space-y-1">
+                    <RadioGroup
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                      className="flex flex-col space-y-1"
+                    >
                       <FormItem className="flex items-center space-x-3 space-y-0">
                         <FormControl>
                           <RadioGroupItem value="male" />
@@ -52,7 +58,7 @@ const Tab2: React.FC<Tab2Props> = ({ formMethods, onSubmit, header }) => {
                         <FormControl>
                           <RadioGroupItem value="none" />
                         </FormControl>
-                        <FormLabel className="font-normal">Prefer not to say!</FormLabel>
+                        <FormLabel className="font-normal">Prefer not to say</FormLabel>
                       </FormItem>
                     </RadioGroup>
                   </FormControl>
@@ -62,12 +68,17 @@ const Tab2: React.FC<Tab2Props> = ({ formMethods, onSubmit, header }) => {
             />
             <FormField
               control={control}
-              name="age"
+              name="tab2.age"
               render={({ field }) => (
                 <FormItem className="mt-4">
                   <FormLabel>Age</FormLabel>
                   <FormControl>
-                    <Input type="number" placeholder="Please enter your age" {...field} onChange={event => field.onChange(+event.target.value)} />
+                    <Input
+                      type="number"
+                      placeholder="Please enter your age"
+                      {...field}
+                      onChange={(event) => field.onChange(+event.target.value)}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -75,12 +86,16 @@ const Tab2: React.FC<Tab2Props> = ({ formMethods, onSubmit, header }) => {
             />
             <FormField
               control={control}
-              name="bio"
+              name="tab2.bio"
               render={({ field }) => (
                 <FormItem className="mt-4">
                   <FormLabel>Bio</FormLabel>
                   <FormControl>
-                    <Textarea placeholder="Tell us a little bit about yourself" className="resize-none" {...field} />
+                    <Textarea
+                      placeholder="Tell us a little bit about yourself"
+                      className="resize-none"
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -88,7 +103,7 @@ const Tab2: React.FC<Tab2Props> = ({ formMethods, onSubmit, header }) => {
             />
             <FormField
               control={control}
-              name="agree"
+              name="tab2.agree"
               render={({ field }) => (
                 <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4 mt-4">
                   <div className="space-y-0.5">
@@ -102,7 +117,7 @@ const Tab2: React.FC<Tab2Props> = ({ formMethods, onSubmit, header }) => {
             />
             <FormField
               control={control}
-              name="position"
+              name="tab2.position"
               render={({ field }) => (
                 <FormItem className="mt-4">
                   <FormLabel>Preferred Position</FormLabel>
@@ -114,16 +129,16 @@ const Tab2: React.FC<Tab2Props> = ({ formMethods, onSubmit, header }) => {
                     </FormControl>
                     <SelectContent>
                       <SelectItem value="frontend">Front-end Developer</SelectItem>
-                      <SelectItem value="backend">Backend Developer</SelectItem>
-                      <SelectItem value="fullstack">FullStack Developer</SelectItem>
+                      <SelectItem value="backend">Back-end Developer</SelectItem>
+                      <SelectItem value="fullstack">Full-stack Developer</SelectItem>
                     </SelectContent>
                   </Select>
-                  <FormMessage />
                 </FormItem>
               )}
             />
           </CardContent>
           <CardFooter>
+            <Button className="mx-4" onClick={() => { tabChange("creds") }}> Previous</Button>
             <Button type="submit">Submit</Button>
           </CardFooter>
         </form>
