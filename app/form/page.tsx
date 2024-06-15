@@ -10,6 +10,7 @@ import { z } from "zod";
 import { useForm, UseFormReturn } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useToast } from "@/components/ui/use-toast";
+import { ModeToggle } from "@/components/Theme-Toggle";
 
 const tab1Schema = z.object({
     email: z.string().email("Please enter a valid email"),
@@ -101,7 +102,7 @@ const Form: React.FC = () => {
     return (
         <>
             <Toaster />
-            <Divider style={{ fontSize: "50px", fontWeight: "200", color: "white", borderColor: "white" }}>Login Page</Divider>
+            <ModeToggle />
             <div className="flex w-screen justify-center p-11 mt-[1%]">
                 <Tabs value={tab} defaultValue="creds" className="w-[40%]">
                     <TabsList className="grid w-full grid-cols-2">
