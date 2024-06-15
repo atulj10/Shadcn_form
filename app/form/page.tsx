@@ -89,11 +89,12 @@ const Form: React.FC = () => {
         if (errors.tab2 && !errors.tab1) {
             setTab("personal");
         }
+
         else {
             setTab("creds");
         }
 
-        console.log(errors);
+        // console.log(errors);
 
     }
 
