@@ -4,16 +4,18 @@ import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from "
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { UseFormReturn, useFormContext } from "react-hook-form";
+import { SubmitErrorHandler, SubmitHandler, UseFormReturn, useFormContext } from "react-hook-form";
 import { CombinedFormValues } from "@/app/form/page";
 
 interface Tab1Props {
   formMethods: UseFormReturn<CombinedFormValues>;
   header: string;
+  handleSubmit: SubmitHandler<CombinedFormValues>;
+  handleInvalid: SubmitErrorHandler<CombinedFormValues>;
   tabChange: (tab: string) => void;
 }
 
-const Tab1: React.FC<Tab1Props> = ({ formMethods, header,tabChange }) => {
+const Tab1: React.FC<Tab1Props> = ({ formMethods, header,handleSubmit, handleInvalid,tabChange }) => {
   const { control } = formMethods;
 
   return (
@@ -22,7 +24,7 @@ const Tab1: React.FC<Tab1Props> = ({ formMethods, header,tabChange }) => {
         <CardTitle>{header}</CardTitle>
       </CardHeader>
       <Form {...formMethods}>
-        <form className="space-y-8">
+        <form className="space-y-8" onSubmit={formMethods.handleSubmit(handleSubmit, handleInvalid)}>
           <CardContent className="py-4 px-8">
             <FormField
               control={control}
@@ -79,6 +81,7 @@ const Tab1: React.FC<Tab1Props> = ({ formMethods, header,tabChange }) => {
           </CardContent>
           <CardFooter>
             <Button onClick={()=>{tabChange("personal")}}>Next</Button>
+            <Button className="mx-4" type="submit">Submit</Button>
           </CardFooter>
         </form>
       </Form>

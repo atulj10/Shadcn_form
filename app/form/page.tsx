@@ -110,7 +110,7 @@ const Form: React.FC = () => {
                         <TabsTrigger value="personal">Personal</TabsTrigger>
                     </TabsList>
                     <TabsContent value="creds">
-                        <Tab1 formMethods={formMethods} header="Login Credentials" tabChange={tabChange} />
+                        <Tab1 formMethods={formMethods} header="Login Credentials" tabChange={tabChange}  handleSubmit={handleSubmit} handleInvalid={handleInvalid} />
                     </TabsContent>
                     <TabsContent value="personal">
                         <Tab2 formMethods={formMethods} header="Personal Information" handleSubmit={handleSubmit} handleInvalid={handleInvalid} tabChange={tabChange} />
